@@ -27,6 +27,8 @@ while 1 :
         if ser.isOpen():
             ser.close()
         break
+   
+    
     else:
         ser.write(data.encode())
         #time.sleep(2)
