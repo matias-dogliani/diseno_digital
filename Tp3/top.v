@@ -1,19 +1,21 @@
-`define N_LEDS 4			// Numero de LEDS  
-`define N_SW				//Switches  
-`define N_BTN				//Botones selectores  
-`define N_ILEDS 4 			//LEDs indicadores 
+
 
 module top 
-(
-	
-	input [N_SW -1 : 0] i_sw, 
+#(
+    parameter N_LEDS = 4, 
+    parameter N_SW = 4, 
+    parameter N_BTN = 4, 
+    parameter N_ILEDS = 4
+)
+
+(	input [N_SW -1 : 0] i_sw, 
 	input [N_BTN -1 : 0] i_btn, 
 	input i_ck_reset, 
 	input  clock,
 	output [N_LEDS-1 : 0] o_led, 
 	output [N_LEDS-1 : 0] o_led_r, 
 	output [N_LEDS-1 : 0] o_led_g, 
-	output [N_LEDS-1 : 0] o_led_b);
+	output [N_LEDS-1 : 0] o_led_b );
 
 
 	wire enable;							//habilita shiftreg, flash - Salida de counter 
@@ -53,9 +55,8 @@ module top
 			.i_mux_sel(i_btn[0]),			//Seleccion de modo 
 			.i_shift_leds(leds_shiftreg),
 			.i_flash_leds(leds_flash),
-			.o_led_mux(o_led[0])
-			.o_leds(leds_mux),
-		);
+			.o_led_mux(o_led[0]),
+			.o_leds(leds_mux));
 	leds 							
 		u_leds_box(
 			.i_led(leds_mux), 					//LEDs que salen del mux
@@ -63,7 +64,6 @@ module top
 			.o_led(o_led[N_LEDS-1 : 0]),  							//LEDs indicativos 
 			.o_led_r(o_led_r[N_LEDS-1 : 0]),
 			.o_led_g(o_led_g[N_LEDS-1 : 0]),
-			.o_led_b(o_led_b[N_LEDS-1 : 0]),
-		);
+			.o_led_b(o_led_b[N_LEDS-1 : 0]));
 
 endmodule //top

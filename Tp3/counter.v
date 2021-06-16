@@ -1,6 +1,6 @@
 module counter  
 #(   
-    parameter NB_COUNT  =32,        //No tiene sentido parametrizar 
+    parameter NB_COUNT  =32        //No tiene sentido parametrizar 
                                     // los sw_selector porque tengoq que cambiar el assign (y no se usa un generate o algo asi)
 )
  (
@@ -15,7 +15,7 @@ module counter
     localparam R0  = (2**(NB_COUNT-10))-1 ;
     localparam R1  = (2**(NB_COUNT-9))-1  ;
     localparam R2  = (2**(NB_COUNT-8))-1  ;
-    localparam R3  = (2**(NB_COUNT-7))-1  
+    localparam R3  = (2**(NB_COUNT-7))-1  ;
   
     // Selector 
     localparam SEL0  = 2'b00;

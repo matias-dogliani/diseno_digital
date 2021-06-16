@@ -12,18 +12,16 @@ module flash
 	wire rst = ~i_ck_reset; 
 	assign o_flash = leds;
 	
-	always @(posedge clock or posedge rst ) begin
+	always @(posedge clk or posedge rst ) begin
 
 		if(rst)
 			leds <= {(N_LEDS -1){1'b1}}; 
 		else if (i_enable) begin
 			leds <= ~leds;
-			else 
-				leds <= leds; 
-
-		end
-
-		
+			end
+		else 
+			leds <= leds; 
+				
 	end 
 
 endmodule //flash

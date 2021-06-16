@@ -15,13 +15,13 @@ module shiftreg
 	wire rst; 
 	reg [N_LEDS - 1 : 0] shift_reg;
 
- 	assign rst = ~i_ck_reset; 
+ 	assign rst = ~i_ck_rst; 
 	assign o_shiftreg = shift_reg;	
 
 	always @(posedge clk or posedge rst ) begin		
 		if(rst)																// rst --> algun valor en 1 
-			shift_reg <= { (N_LEDS -1)-1 {1b'0}, 1b'1  }
-
+			shift_reg <= {(N_LEDS-2){1'b1}}; 
+		
 		else if (i_shift_enable)begin											//Contador llego al limite 
 		
 			if (i_shift_dir == DER)begin

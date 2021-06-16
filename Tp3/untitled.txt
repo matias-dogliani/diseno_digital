@@ -1,0 +1,4 @@
+# Controlador de LEDs 
+
+
+![Diagrama en bloques](img/diagram_e0.png)

@@ -2,7 +2,7 @@
 
 module ledmux 
 #(
-	parameter N_LEDS = 4
+	parameter N_LEDS = 4,
 	parameter MUXSEL = 1	
 )
 (
@@ -17,7 +17,7 @@ module ledmux
   	localparam FLASH = 1'b1 ;
 
 
-  	assign o_leds = (mux_sel == SHIFT) ? shift_leds : flash_leds;
- 	assign o_led_mux = mux_sel ;
+  	assign o_leds = (i_mux_sel == SHIFT) ? i_shift_leds : i_flash_leds;
+ 	assign o_led_mux = i_mux_sel ;
 
 endmodule //ledmux
