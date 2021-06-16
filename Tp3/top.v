@@ -35,9 +35,9 @@ module top
 		u_shift(
 			.clk(clock),
 			.i_shift_enable(enable),
-			.i_ck_reset(),
-			.i_shift_dir(),
-			.o_shiftreg()
+			.i_ck_reset(i_ck_reset),
+			.i_shift_dir(i_sw[3]),			//Seleccion de dir 
+			.o_shiftreg(leds_shiftreg)      //LEDs de salida del shift - entrada a mux led
 		);
 
 	flash
@@ -45,25 +45,25 @@ module top
 			.clk(clock),
 			.i_ck_reset(i_ck_reset),
 			.i_enable(enable),
-			.o_flash(leds_flash)
+			.o_flash(leds_flash)			//LEDs de salida de flash - entrada de a mux led 
 		);
 
 	ledmux 
 		u_mux(
-			.i_mux_sel(),
+			.i_mux_sel(i_btn[0]),			//Seleccion de modo 
 			.i_shift_leds(leds_shiftreg),
 			.i_flash_leds(leds_flash),
 			.o_led_mux(o_led[0])
 			.o_leds(leds_mux),
 		);
-	leds 
+	leds 							
 		u_leds_box(
-			.i_led(), //LEDs que salen del mux
-			.i_btn(),			
-			.o_led()  //LEDs indicativos 
-			.o_led_r(),
-			.o_led_g(),
-			.o_led_b(),
+			.i_led(leds_mux), 					//LEDs que salen del mux
+			.i_btn(i_btn[3:1]),			
+			.o_led(o_led[N_LEDS-1 : 0]),  							//LEDs indicativos 
+			.o_led_r(o_led_r[N_LEDS-1 : 0]),
+			.o_led_g(o_led_g[N_LEDS-1 : 0]),
+			.o_led_b(o_led_b[N_LEDS-1 : 0]),
 		);
 
 endmodule //top
