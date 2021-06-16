@@ -2,8 +2,8 @@ module shiftreg
 #(parameter N_LEDS = 4)
 
 (
-	input i_shift_enable, 
 	input clk, 
+	input i_shift_enable, 
 	input i_ck_rst, 
 	input i_shift_dir,
 	output [N_LEDS - 1 : 0] o_shiftreg
