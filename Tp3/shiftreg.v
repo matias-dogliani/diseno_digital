@@ -20,7 +20,7 @@ module shiftreg
 
 	always @(posedge clk or posedge rst ) begin		
 		if(rst)																// rst --> algun valor en 1 
-			shift_reg <= {(N_LEDS-2){1'b1}}; 
+			shift_reg <= {{(N_LEDS-2){1'b0}},1'b1 };                        //shift_reg <= {{3{1'b0}},1'b1 };
 		
 		else if (i_shift_enable)begin											//Contador llego al limite 
 		
@@ -36,8 +36,4 @@ module shiftreg
 		else begin														//Disable 
 			shift_reg <= shift_reg;										//Explicito   
 		end
-
-
-	end
-
-endmodule //shiftreg
+endmodule
