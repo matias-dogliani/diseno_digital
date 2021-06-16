@@ -24,7 +24,7 @@ module top
 	wire [N_LEDS-1 : 0 ] leds_mux; 			// salida del mux de modos 
 
 
-	counter //Falta acomodar en counter.v 
+	counter 
 		u_counter( 
 			.clk(clock),
 			.i_count_enable(i_sw[0]),

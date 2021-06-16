@@ -1,4 +1,4 @@
-#Controlador de LEDs 
+# Controlador de LEDs 
 
 ![Imagen](img/diagrama_e1.png)
 
