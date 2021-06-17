@@ -2,17 +2,68 @@
 
 ![Imagen](./img/diagrama_e1.png)
 
-<img source = "./img/diagrama_e1.png">
+
 ## Counter
 
 Es el bloque formado por el **contador** de 32 bits, el **limite** del contador y el **comparador** para resetear el contador a cero una vez que se alcanzo la referencia
 
-Entradas:
+![Imagen](./img/counter.png)
 
-* Clock
+Está formado por  un bloque sumador (incrementa), un registro acumulador, 4 constantes, un reset asíncrono y un FF para la salida de habilitación de los otros módulos. 
 
-* Enable
+![Imagen](./img/tb_counter.png)
 
-* Ref_selector
 
-* Ck_reset
+De la simulación se puede observar como son producidos los pulsos de shift enable (mientras no se pulse el reset) y como cambia la elección de las constantes. 
+
+
+## Shiftreg 
+
+Este bloque se encarga de hacer un shift cada vez que recibe un shift_enable del módulo *counter* con una dirección determinada por un switch. 
+
+![Imagen](./img/shiftreg.png)
+
+
+Se trata de un registro con reset asíncrono y un multiplexor para la selección del shift. 
+
+![Imagen](./img/shift_auto.png)
+
+En la simulación podemos observar como por cada pulso de enable este bloque realizar un registro en la dirección determinada y luego cuando la variable *dir* toma el valor de 1 cambia de sentido el shift. 
+
+## Flash 
+
+Este bloque es simplemente un registro con un reset asíncrono y un negador, para que en cada ciclo de reloj se invierta la salida (efecto de flash) 
+
+
+![Imagen](./img/flash.png)
+
+En la simulación se puede observar como se invierte el registro de LEDs mientras se encuentra habilitado este módulo. 
+
+![Imagen](./img/flash_tb.png)
+
+
+## Ledmux
+
+Este bloque es simplemente un multiplexor con dos entradas de *N_LEDS* bits y una salida de *N_LEDS* bits también, estos bits son los estados de los leds que tomaran los correspondientes leds de colores según corresponda. 
+
+![Imagen](./img/ledmux.png)
+
+En la simulación se observa como la salida toma el valor del vector de estados de LEDs del módulo flash o del módulo shiftreg a medida que el selector del mux cambia. 
+
+![Imagen](./img/flash_tb.png)
+
+
+## Leds 
+
+Este módulo es el que se encarga de encender los LEDs del correspondiente color y de realizar el cambio. Es una máquina de estado que cambia solo cuando una combinación determinada de pulsadores ocurre. En caso que esa combinación no suceda, no cambia de estado y al ser una máquina de Moore, tampoco la salida. 
+
+![Imagen](./img/leds.png)
+
+
+En la simulación se puede observar que bloque de color de LEDs (o_led_r/g/b) toma el valor de la entrada *leds* según la combinación de los pulsadores *btn* 
+
+![Imagen](./img/tb_leds.png)
+
+
+
+Una implementación de máquina de estado finita estructurada como tal, se puede ver en la [descripción](./modulos/FSM_leds) en verilog aunque no se utilizó esta. 
