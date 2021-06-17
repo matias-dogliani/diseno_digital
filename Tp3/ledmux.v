@@ -3,7 +3,7 @@
 module ledmux 
 #(
 	parameter N_LEDS = 4,
-	parameter MUXSEL = 1	
+	parameter MUXSEL = 2	
 )
 (
 	input [MUXSEL-1 : 0] i_mux_sel ,  			//btn[0] 
