@@ -1,5 +1,3 @@
-
-
 module top 
 #(
     parameter N_LEDS = 4, 
