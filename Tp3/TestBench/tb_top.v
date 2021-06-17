@@ -15,8 +15,6 @@ module tb_top();
 	wire [N_LEDS-1 : 0] led_r, 
 	wire [N_LEDS-1 : 0] led_g, 
 	wire [N_LEDS-1 : 0] led_b );
-
-
    
    initial begin
 
