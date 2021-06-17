@@ -12,8 +12,8 @@ module tb_top();
 	reg ck_reset; 
 	reg  clock;
 	wire [N_LEDS-1 : 0] led; 
-	wire [N_LEDS-1 : 0] led_r, 
-	wire [N_LEDS-1 : 0] led_g, 
+	wire [N_LEDS-1 : 0] led_r; 
+	wire [N_LEDS-1 : 0] led_g; 
 	wire [N_LEDS-1 : 0] led_b );
    
    initial begin
