@@ -67,3 +67,22 @@ En la simulación se puede observar que bloque de color de LEDs (o_led_r/g/b) to
 
 
 Una implementación de máquina de estado finita estructurada como tal, se puede ver en la [descripción](./modulos/FSM_leds) en verilog aunque no se utilizó esta. 
+
+## Shiftreg2leds 
+
+Este modulo se agrega para el **ejercicio 2** y se lo implementó también como una máquina de estados para que cada estado sea un **paso de la secuencia** y la transición entre estados se logra mediante un sumador o un restador según la dirección indicada. El reset automático o el retorno al punto inicial de la secuencia se realiza por el overflow del registro contador. 
+
+
+![Imagen](./img/shift2led.png)
+
+
+En la simulacion como alterna entre 0110 y 1001 con la dirección indicada según el selector. 
+
+![Imagen](./img/tb_shiftreg2.png)
+
+
+## seqmux 
+
+Este módulo también se agrega para el ejercicio 2.  Y es una version similar a la del ejercicio solo que con una más y una logica combinacional para incrementar una variable *estado* que determina la salida del mutiplexor 
+
+![Imagen](./img/seqmux.png)
