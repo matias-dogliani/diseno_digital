@@ -87,6 +87,9 @@ Este módulo también se agrega para el ejercicio 2.  Y es una version similar a
 
 ![Imagen](./img/seqmux.png)
 
+Se añade un reset, para resetear el registro de estados a cero 
+
+![Imagen](./img/tb_seqmux.png)
 
 
 ## Consultas 
@@ -94,5 +97,5 @@ Este módulo también se agrega para el ejercicio 2.  Y es una version similar a
 [] Como evitar ROM en los diseños 
 [] Implementacion de Maq. de estados en verilog 
 [] Buenas practicas en top: ¿Es bueno manejar entradas en este modulo con algo de logica secuencia y combinacional o mejor que se solucione en cada modulo? 
-[] Error porque no encuentra la instanciación aunque sí esté agregado el source. 
-
+[] Es buena práctica poner en la sensitive list un pulsador o switch solo ? 
+[] Hace falta un reset ? Por mas que nosotros tengamos cubiertos  todos los estados? Si en algun estado tiene que caer en el arranque. 
