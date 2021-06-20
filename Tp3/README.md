@@ -94,12 +94,12 @@ Se añade un reset, para resetear el registro de estados a cero
 
 ## Consultas 
 
--[] Como evitar ROM en los diseños 
+- [] Como evitar ROM en los diseños 
 
--[] Implementacion de Maq. de estados en verilog 
+- [] Implementacion de Maq. de estados en verilog 
 
--[] Buenas practicas en top: ¿Es bueno manejar entradas en este modulo con algo de logica secuencia y combinacional o mejor que se solucione en cada modulo? 
+- [] Buenas practicas en top: ¿Es bueno manejar entradas en este modulo con algo de logica secuencia y combinacional o mejor que se solucione en cada modulo? 
 
--[] Es buena práctica poner en la sensitive list un pulsador o switch solo ? 
+- [] Es buena práctica poner en la sensitive list un pulsador o switch solo ? 
 
--[] Hace falta un reset ? Por mas que nosotros tengamos cubiertos  todos los estados? Si en algun estado tiene que caer en el arranque. 
+- [] Hace falta un reset ? Por mas que nosotros tengamos cubiertos  todos los estados? Si en algun estado tiene que caer en el arranque. 
