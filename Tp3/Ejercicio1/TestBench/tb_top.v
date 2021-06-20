@@ -2,19 +2,18 @@
 
 module tb_top();
    
-    localparam  N_LEDS = 4; 
-    localparam  N_SW = 4; 
-    localparam  N_BTN = 4; 
-    localparam  N_ILEDS = 4;  
+    
 	
-	reg [N_SW -1 : 0] sw; 
-	reg [N_BTN -1 : 0] btn;
+	reg [4 -1 : 0] sw; 
+	reg [4-1 : 0] btn;
 	reg ck_reset; 
 	reg  clock;
-	wire [N_LEDS-1 : 0] led; 
-	wire [N_LEDS-1 : 0] led_r; 
-	wire [N_LEDS-1 : 0] led_g; 
-	wire [N_LEDS-1 : 0] led_b );
+	wire [4-1 : 0] led; 
+	wire [4-1 : 0] led_r; 
+	wire [4-1 : 0] led_g;
+	wire [4-1 : 0] led_b;
+
+
    
    initial begin
 
@@ -37,7 +36,7 @@ module tb_top();
 	  ck_reset = 1'b0;     // Presiono el reset 
 	  #5
 	  ck_reset = 1'b1; 
-   
+      #100000 $finish;
    end
    
    always #5 clock = ~clock;					           //clock de f = 1/2*5ns 

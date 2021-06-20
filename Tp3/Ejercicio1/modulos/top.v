@@ -1,3 +1,5 @@
+
+
 module top 
 #(
     parameter N_LEDS = 4, 
@@ -22,7 +24,7 @@ module top
 	wire [N_LEDS-1 : 0 ] leds_mux; 			// salida del mux de modos 
 
 
-	counter 
+	counter //Falta acomodar en counter.v 
 		u_counter( 
 			.clk(clock),
 			.i_count_enable(i_sw[0]),
@@ -35,7 +37,7 @@ module top
 		u_shift(
 			.clk(clock),
 			.i_shift_enable(enable),
-			.i_ck_reset(i_ck_reset),
+			. i_ck_rst(i_ck_reset),
 			.i_shift_dir(i_sw[3]),			//Seleccion de dir 
 			.o_shiftreg(leds_shiftreg)      //LEDs de salida del shift - entrada a mux led
 		);
@@ -43,7 +45,7 @@ module top
 	flash
 		u_flash(
 			.clk(clock),
-			.i_ck_reset(i_ck_reset),
+			.i_ck_rst(i_ck_reset),
 			.i_enable(enable),
 			.o_flash(leds_flash)			//LEDs de salida de flash - entrada de a mux led 
 		);
@@ -58,10 +60,10 @@ module top
 	leds 							
 		u_leds_box(
 			.i_led(leds_mux), 					//LEDs que salen del mux
-			.i_btn(i_btn[3:1]),			
-			.o_led(o_led[N_LEDS-1 : 0]),  							//LEDs indicativos 
-			.o_led_r(o_led_r[N_LEDS-1 : 0]),
-			.o_led_g(o_led_g[N_LEDS-1 : 0]),
-			.o_led_b(o_led_b[N_LEDS-1 : 0]));
+			.i_btn(i_btn),			
+			.o_led(o_led),  							//LEDs indicativos 
+			.o_led_r(o_led_r),
+			.o_led_g(o_led_g),
+			.o_led_b(o_led_b));
 
 endmodule //top

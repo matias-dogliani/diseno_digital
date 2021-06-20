@@ -36,4 +36,8 @@ module shiftreg
 		else begin														//Disable 
 			shift_reg <= shift_reg;										//Explicito   
 		end
-endmodule
+
+
+	end
+
+endmodule //shiftreg

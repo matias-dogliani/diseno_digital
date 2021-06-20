@@ -8,13 +8,14 @@ module counter
     input [1:0] i_count_sel,            // i_sw[2:1]     
     input i_ck_reset ,                  //reset asincrono
     input clk,                       // clk100Mhz
-    output o_shift_enable);
+    output o_shift_enable 
+    );
 
     // Valor de numeros a comparar  
-    localparam R0  = (2**(NB_COUNT-10))-1 ;
-    localparam R1  = (2**(NB_COUNT-9))-1  ;
-    localparam R2  = (2**(NB_COUNT-8))-1  ;
-    localparam R3  = (2**(NB_COUNT-7))-1  ;
+    localparam R0  = ((NB_COUNT-10))-1 ;
+    localparam R1  = ((NB_COUNT-9))-1  ;
+    localparam R2  = ((NB_COUNT-8))-1  ;
+    localparam R3  = ((NB_COUNT-7))-1  ;
   
     // Selector 
     localparam SEL0  = 2'b00;
@@ -33,7 +34,7 @@ module counter
     assign o_shift_enable = enable_shiftreg;
     
     // logica secuencial 
-    always @(negedge clk or posedge rst) begin
+    always @(posedge clk or posedge rst) begin
        if (rst)
                 counter  <= {NB_COUNT{1'b0}};
 

@@ -86,3 +86,13 @@ En la simulacion como alterna entre 0110 y 1001 con la dirección indicada segú
 Este módulo también se agrega para el ejercicio 2.  Y es una version similar a la del ejercicio solo que con una más y una logica combinacional para incrementar una variable *estado* que determina la salida del mutiplexor 
 
 ![Imagen](./img/seqmux.png)
+
+
+
+## Consultas 
+
+[] Como evitar ROM en los diseños 
+[] Implementacion de Maq. de estados en verilog 
+[] Buenas practicas en top: ¿Es bueno manejar entradas en este modulo con algo de logica secuencia y combinacional o mejor que se solucione en cada modulo? 
+[] Error porque no encuentra la instanciación aunque sí esté agregado el source. 
+
