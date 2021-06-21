@@ -50,7 +50,7 @@ Este bloque es simplemente un multiplexor con dos entradas de *N_LEDS* bits y un
 
 En la simulación se observa como la salida toma el valor del vector de estados de LEDs del módulo flash o del módulo shiftreg a medida que el selector del mux cambia. 
 
-![Imagen](./img/flash_tb.png)
+![Imagen](./img/ledmux_tb.png)
 
 
 ## Leds 
