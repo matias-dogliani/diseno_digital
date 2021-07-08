@@ -56,11 +56,15 @@ def arrayFixedInt(totalWidth, fractWidth, N, signedMode='S', roundMode='trunc', 
 
   
 
-  if(isinstance(N, (list, numpy.ndarray))):
+  if(isinstance(N[0],DeFixedInt)):                    #Sin son elementos FixedPoint
+      retA=numpy.array([DeFixedInt(totalWidth, fractWidth, signedMode, roundMode, saturateMode) for _ in range(len(N))])
+      for index in range(len(N)): 
+          retA[index].value=N[index].fValue
+  elif(isinstance(N, (list, numpy.ndarray))):
       retA=numpy.array([DeFixedInt(totalWidth, fractWidth, signedMode, roundMode, saturateMode) for _ in N])
       for index in range(len(N)):
           retA[index].value=N[index]
-
+  
   else:
     raise (TypeError, "type(N) = '%s' not supported" %type(N))
 
@@ -1039,6 +1043,18 @@ class DeFixedInt(object):
     return int(retVal)
 
 
+  def Range(self):
+    '''
+    Return the possible value range  
+    '''
+    if (self.signedMode=='S'):
+        min = -2**(self.intWidth-1)
+        max = 2**(self.intWidth-1) - 1.0 / 2.0**self.fractWidth
+        return (min,max)
+    elif(self.signedMode=='U'):
+        min = 0
+        max = 2**(self.intWidth)-2**(-self.fractWidth)
+        return (min,max)
   
   def showRange(self):
     '''
@@ -1047,12 +1063,16 @@ class DeFixedInt(object):
     if (self.signedMode=='S'):
         min = -2**(self.intWidth-1)
         max = 2**(self.intWidth-1) - 1.0 / 2.0**self.fractWidth
-        print ("S(%d, %d): " %(self.intWidth+self.fractWidth, self.fractWidth), "%10.10f ... %10.10f" % (min, max))
+        #print ("S(%d, %d): " %(self.intWidth+self.fractWidth, self.fractWidth), "%10.10f ... %10.10f" % (min, max))
+        return (min,max)
     elif(self.signedMode=='U'):
         min = 0
         max = 2**(self.intWidth)-2**(-self.fractWidth)
-        print ("U(%d, %d): " %(self.intWidth+self.fractWidth, self.fractWidth), "%10.10f ... %10.10f" % (min, max))
-   
+        #print ("U(%d, %d): " %(self.intWidth+self.fractWidth, self.fractWidth), "%10.10f ... %10.10f" % (min, max))
+        return (min,max)
+        
+        
+        
   def showValueRange(self):
     '''Print out the integer # and its floating point representation'''
     if (self.signedMode=='S'):
