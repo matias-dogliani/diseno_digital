@@ -52,7 +52,7 @@ module FpMul
 
 	assign mulFR = a*b;
 
-	/*Truncado y Saturacion */		
+/*Truncado y Saturacion */		
   	always @(*) begin
         if ( &mulFR[(NB_O_FR -1)-:(NBI_O_FR-NBI_OUT)+1] || ~|mulFR[(NB_O_FR -1)-: (NBI_O_FR-NBI_OUT)+1])
             mulS_trunc_sat = mulFR[ (NB_O_FR -1) - (NBI_O_FR - NBI_OUT) -: NB_OUT ];
@@ -63,22 +63,22 @@ module FpMul
         else
             mulS_trunc_sat = { 1'b0 , { NB_OUT-1 {1'b1} }};				// Maximo positivo
     end
-	
+
+
 	/*Saturacion y redondeo */
     always @(*) begin
         mul_r= $signed(mulFR[(NB_O_FR -1) -: (NB_ROUND -1)]) + $signed(2'b01); //Sumo + 1 LSB
-	   	
-		//Saturo de la misma forma que la anterior 
+	   	//Saturo de la misma forma que la anterior 
+        
 		if ( &mul_r[(NB_ROUND -1)-:(NBI_O_FR-NBI_O_ROUND)+2] || ~|mul_r[(NB_ROUND -1)-:(NBI_O_FR-NBI_O_ROUND) +2])
-            mulS_round_sat = mul_r[(NB_ROUND -1) - (NBI_O_FR-NBI_O_ROUND) -1 -: NB_O_ROUND];
+          mulS_round_sat = mul_r[(NB_ROUND -1) - (NBI_O_FR-NBI_O_ROUND) -1 -: NB_O_ROUND];
 
-        else if ( mul_r[(NB_ROUND -1)] )
-            mulS_round_sat = { 1'b1 , { NB_O_ROUND-1 {1'b0} }};
+//         else if ( mul_r[(NB_ROUND -1)] )
+//              mulS_round_sat = $signed({ 1'b1 , { NB_O_ROUND-1 {1'b0} }});
         
         else
-            mulS_round_sat = { 1'b0 , { NB_O_ROUND {1'b1} }};
+            mulS_round_sat = $signed({ 1'b0 , { NB_O_ROUND-1 {1'b1} }});
     end
-
 
 
 	/* Salida Full Resolution */
@@ -91,10 +91,7 @@ module FpMul
 	assign o_mulS_trunc_sat = mulS_trunc_sat; 
 
 	/*Salida de redondeo y saturacion*/
-	assign o_mulS_round_sat = mulS_round_sat ;
-
-
-
+	assign o_mulS_round_sat = mulS_round_sat ;	
 
 
 

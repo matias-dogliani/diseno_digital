@@ -76,13 +76,13 @@ module sumFp
 	   	//Saturo de la misma forma que la anterior 
         
 		if ( &sum_r[(NB_ROUND -1)-:(NBI_O_FR-NBI_O_ROUND)+2] || ~|sum_r[(NB_ROUND -1)-:(NBI_O_FR-NBI_O_ROUND) +2])
-            sumS_round_sat = sum_r[(NB_ROUND -1) - (NBI_O_FR-NBI_O_ROUND) -1 -: NB_O_ROUND];
+          sumS_round_sat = sum_r[(NB_ROUND -1) - (NBI_O_FR-NBI_O_ROUND) -1 -: NB_O_ROUND];
 
-        else if ( sum_r[(NB_ROUND -1)] )
-            sumS_round_sat = { 1'b1 , { NB_O_ROUND-1 {1'b0} }};
+//         else if ( sum_r[(NB_ROUND -1)] )
+//              sumS_round_sat = $signed({ 1'b1 , { NB_O_ROUND-1 {1'b0} }});
         
         else
-            sumS_round_sat = { 1'b0 , { NB_O_ROUND {1'b1} }};
+            sumS_round_sat = $signed({ 1'b0 , { NB_O_ROUND-1 {1'b1} }});
     end
 
 

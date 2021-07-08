@@ -29,10 +29,10 @@ module tb_sumFp();
 
     integer A_vec; 
     integer B_vec  ;
-    integer SumFullRes_vec;
-    integer SumOvTrunc_vec; 
-    integer SumSatTrunc_vec; 
-    integer SumSatRound_vec;  
+    integer MulFullRes_vec;
+    integer MulOvTrunc_vec; 
+    integer MulSatTrunc_vec; 
+    integer MulSatRound_vec;  
   
     reg Ap; 
     reg Bp;
@@ -48,17 +48,17 @@ module tb_sumFp();
 	B_vec = $fopen("/home/matias_dogliani/Vivado_projects/Tp4/B.in","r");
     if(B_vec == 0) $stop;
 	
-	SumFullRes_vec= $fopen("/home/matias_dogliani/Vivado_projects/Tp4/SumFullResV.out","w");
-	if(SumFullRes_vec == 0) $stop;
+	MulFullRes_vec= $fopen("/home/matias_dogliani/Vivado_projects/Tp4/MulFullResV.out","w");
+	if(MulFullRes_vec == 0) $stop;
 	
-	SumOvTrunc_vec= $fopen("/home/matias_dogliani/Vivado_projects/Tp4/SumOvTruncV.out","w");
-	if(SumOvTrunc_vec == 0) $stop;
+	MulOvTrunc_vec= $fopen("/home/matias_dogliani/Vivado_projects/Tp4/MulOvTruncV.out","w");
+	if(MulOvTrunc_vec == 0) $stop;
 	
-	SumSatTrunc_vec= $fopen("/home/matias_dogliani/Vivado_projects/Tp4/SumSatTruncV.out","w");
-	if(SumSatTrunc_vec == 0) $stop;
+	MulSatTrunc_vec= $fopen("/home/matias_dogliani/Vivado_projects/Tp4/MulSatTruncV.out","w");
+	if(MulSatTrunc_vec == 0) $stop;
 	
-	SumSatRound_vec= $fopen("/home/matias_dogliani/Vivado_projects/Tp4/SumSatRoundV.out","w");
-	if(SumSatRound_vec == 0) $stop;
+	MulSatRound_vec= $fopen("/home/matias_dogliani/Vivado_projects/Tp4/MulSatRoundV.out","w");
+	if(MulSatRound_vec == 0) $stop;
 	
 	#100000000 $finish ;
 
@@ -73,10 +73,10 @@ module tb_sumFp();
 		if(Ap !=1 | Bp != 1 | count == 1000)begin 			//Fin del archivo 
 			$fclose(A_vec);
 			$fclose(B_vec); 
-			$fclose(SumFullRes_vec);
-			$fclose(SumOvTrunc_vec);
-			$fclose(SumSatTrunc_vec) ;
-			$fclose(SumSatRound_vec) ;
+			$fclose(MulFullRes_vec);
+			$fclose(MulOvTrunc_vec);
+			$fclose(MulSatTrunc_vec) ;
+			$fclose(MulSatRound_vec) ;
 			$display("Done");
 			$stop; 
 		end
@@ -85,22 +85,22 @@ module tb_sumFp();
 
 
 	always @(negedge clk) begin
-		$fdisplay(SumFullRes_vec,"%b",full_res);
-		$fdisplay(SumOvTrunc_vec,"%b",trunc_ovf);
-		$fdisplay(SumSatTrunc_vec,"%b",trunc_sat);
-		$fdisplay(SumSatRound_vec,"%b",sat_round);
+		$fdisplay(MulFullRes_vec,"%b",full_res);
+		$fdisplay(MulOvTrunc_vec,"%b",trunc_ovf);
+		$fdisplay(MulSatTrunc_vec,"%b",trunc_sat);
+		$fdisplay(MulSatRound_vec,"%b",sat_round);
 		
 	end
 
 
-sumFp 
-	u_sumFp(
+FpMul
+	u_FpMul(
 		.i_A(i_A),
 		.i_B(i_B),
-		.o_sumFR(full_res),
-		.o_sumS_trunc_ov(trunc_ovf),
-		.o_sumS_trunc_sat(trunc_sat),
-		.o_sumS_round_sat(sat_round)
+		.o_mulFR(full_res),
+		.o_mulS_trunc_ov(trunc_ovf),
+		.o_mulS_trunc_sat(trunc_sat),
+		.o_mulS_round_sat(sat_round)
 
 	);
 
