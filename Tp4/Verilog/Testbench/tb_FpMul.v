@@ -1,27 +1,27 @@
 `timescale 0.01ns/0.100ps
 module tb_sumFp();
 
-	localparam NB_IN_A = 16;
-	localparam NBF_IN_A = 14;
+	localparam NB_IN_A = 8;
+	localparam NBF_IN_A = 6;
 	
 	localparam NB_IN_B = 12;
 	localparam NBF_IN_B = 11;
 	
-	localparam NB_IN_FR = 17;
-    localparam NBF_IN_FR = 14;
+	localparam NB_OUT_FR =NB_IN_A + NB_IN_B;
+    localparam NBF_OUT_FR = NBF_IN_A + NBF_IN_B;
  	
- 	localparam NB_OUT =11; 
- 	localparam NBF_OUT = 10;
+ 	localparam NB_OUT =12; 
+ 	localparam NBF_OUT = 11;
  	
- 	localparam NB_OUT_ROUND = 9;
- 	localparam NBF_OUT_ROUND = 8; 
+ 	localparam NB_OUT_ROUND = 10;
+ 	localparam NBF_OUT_ROUND = 9; 
  	
  	reg signed [NB_IN_A-1 : 0]i_A ; 
 	reg signed [NB_IN_B-1: 0]i_B ;
 	reg clk; 
 	reg [11:0]count; 
 	
-	wire signed [NB_IN_FR-1:0] full_res; 
+	wire signed [NB_OUT_FR-1:0] full_res; 
 	wire signed [NB_IN_B-1:0] trunc_ovf; 
 	wire signed [NB_OUT -1:0] trunc_sat; 
 	wire signed [NB_OUT_ROUND-1:0] sat_round; 
@@ -103,5 +103,4 @@ FpMul
 		.o_mulS_round_sat(sat_round)
 
 	);
-
 endmodule
