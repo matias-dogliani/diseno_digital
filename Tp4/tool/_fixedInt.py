@@ -989,7 +989,11 @@ class DeFixedInt(object):
 #          
 #      self.__intWidth = intWidth
 #      
-
+  def up_round(self, i):
+    '''Fixes Python3 round to the nearest even applyied by using round() integrated function. 
+    '''
+    f = math.floor(i)
+    return f if i - f < 0.5 else f+1
 
   def round(self, value):
     '''Return the floating point value as int, rounded depending on the 
