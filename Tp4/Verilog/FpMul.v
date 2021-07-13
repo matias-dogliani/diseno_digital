@@ -38,7 +38,7 @@ module FpMul
     localparam NBI_IN_B =NB_IN_B - NBF_IN_B;
     localparam NBI_OUT = (NB_OUT > NBF_OUT)? NB_OUT-NBF_OUT : 0;  //Test . Sino NB_OUT - NBF_OUT solo
     localparam NBI_O_ROUND = NB_O_ROUND - NF_O_ROUND;
-    localparam NB_ROUND = (1 + NBI_O_FR + NBF_OUT + 1) ;  //Redondeo  
+    localparam NB_ROUND = ( NBI_O_FR + NF_O_ROUND + 2) ;  //Redondeo  3 + 8 +2   
 
     wire signed [NB_IN_A -1     : 0] a 	;   //Entrada signada 
     wire signed [NB_IN_B -1     : 0] b 	;   // Entrada b signada
@@ -70,11 +70,11 @@ module FpMul
         mul_r= $signed(mulFR[(NB_O_FR -1) -: (NB_ROUND -1)]) + $signed(2'b01); //Sumo + 1 LSB
 	   	//Saturo de la misma forma que la anterior 
         
-		if ( &mul_r[(NB_ROUND -1)-:(NBI_O_FR-NBI_O_ROUND)+1] || ~|mul_r[(NB_ROUND -1)-:(NBI_O_FR-NBI_O_ROUND) +1])
+		if ( &mul_r[(NB_ROUND -1)-:(NBI_O_FR-NBI_O_ROUND)+2] || ~|mul_r[(NB_ROUND -1)-:(NBI_O_FR-NBI_O_ROUND) +2])
           mulS_round_sat = mul_r[(NB_ROUND -1) - (NBI_O_FR-NBI_O_ROUND) -1 -: NB_O_ROUND];
 
-//         else if ( mul_r[(NB_ROUND -1)] )
-//              mulS_round_sat = $signed({ 1'b1 , { NB_O_ROUND-1 {1'b0} }});
+         else if ( mul_r[(NB_ROUND -1)] )
+              mulS_round_sat = $signed({ 1'b1 , { NB_O_ROUND-1 {1'b0} }});
         
         else
             mulS_round_sat = $signed({ 1'b0 , { NB_O_ROUND-1 {1'b1} }});

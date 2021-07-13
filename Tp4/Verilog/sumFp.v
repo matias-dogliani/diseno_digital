@@ -34,9 +34,12 @@ module sumFp
 
     localparam NBI_IN_A =NB_IN_A - NBF_IN_A;		//Bit enteros  
     localparam NBI_IN_B =NB_IN_B - NBF_IN_B;
-    localparam NBI_OUT = (NB_OUT > NBF_OUT)? NB_OUT-NBF_OUT : 0;  //Test . Sino NB_OUT - NBF_OUT solo
+   
+    localparam NBI_OUT = NB_OUT-NBF_OUT ;  //Test .(NB_OUT > NBF_OUT)? NB_OUT-NBF_OUT : 0;
+   
     localparam NBI_O_ROUND = NB_O_ROUND - NF_O_ROUND;
-    localparam NB_ROUND = (1 + NBI_O_FR + NBF_OUT + 1) ;  //Redondeo  
+    
+    localparam NB_ROUND = ( NBI_O_FR + NF_O_ROUND + 2) ;  //Redondeo  3 + 8 +2 
 
     wire signed [NB_IN_A -1     : 0] a 	;   //Entrada signada 
     wire signed [NB_IN_B -1     : 0] b 	;   // Entrada b signada
@@ -72,14 +75,14 @@ module sumFp
 
 	/*Saturacion y redondeo */
     always @(*) begin
-        sum_r= $signed(sumFR[(NB_O_FR -1) -: (NB_ROUND -1)]) + $signed(2'b01); //Sumo + 1 LSB
+        sum_r= $signed( sumFR[ (NB_O_FR -1) -: (NB_ROUND -1) ] ) + $signed(2'b01); //Sumo + 1 LSB
 	   	//Saturo de la misma forma que la anterior 
         
 		if ( &sum_r[(NB_ROUND -1)-:(NBI_O_FR-NBI_O_ROUND)+2] || ~|sum_r[(NB_ROUND -1)-:(NBI_O_FR-NBI_O_ROUND) +2])
           sumS_round_sat = sum_r[(NB_ROUND -1) - (NBI_O_FR-NBI_O_ROUND) -1 -: NB_O_ROUND];
 
-//         else if ( sum_r[(NB_ROUND -1)] )
-//              sumS_round_sat = $signed({ 1'b1 , { NB_O_ROUND-1 {1'b0} }});
+         else if ( sum_r[(NB_ROUND -1)] )
+              sumS_round_sat = $signed({ 1'b1 , { NB_O_ROUND-1 {1'b0} }});
         
         else
             sumS_round_sat = $signed({ 1'b0 , { NB_O_ROUND-1 {1'b1} }});
