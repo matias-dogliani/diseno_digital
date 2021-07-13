@@ -75,7 +75,7 @@ Luego, mediante Verilog se almacenan las salidas calculadas en un archivo ordena
 
 * [Vectores de TestBench](https://github.com/matias-dogliani/diseno_digital/tree/master/Tp4/TbVec)
 
-* [Errores](https://github.com/matias-dogliani/diseno_digital/tree/master/Tp4/logs). Se obtuvieron errores solo para el caso de saturación y redondeo, por eso solo existen esos archivos. 
+* [Errores](https://github.com/matias-dogliani/diseno_digital/tree/master/Tp4/logs).**Con las correcciones agregadas a la biblioteca no se obtuvo error en ningún caso.**  
 
 
 ### Indicador de saturación 
