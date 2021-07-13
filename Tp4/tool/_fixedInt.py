@@ -1032,10 +1032,10 @@ class DeFixedInt(object):
             if((abs(fract) - 0.5) == 0.0):
               retVal = math.ceil(value)
             else:
-              retVal = round(value)
+              retVal = self.up_round(value)
             #retVal = math.ceil(value)
         else:
-            retVal = round(value)
+              retVal = self.up_round(value)
     else:
       raise ("ERROR: DeFixedInt.round(): '%s' not supported round mode!" % \
           self.__roundMode)
