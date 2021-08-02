@@ -289,6 +289,10 @@ class DeFixedInt(object):
       #print "float value"
       self._fromFloat(value)
 
+    elif(isinstance(value, (numpy.int64))):
+      #print "int value"
+     self.__value = int(value)
+    
     elif(isinstance(value, (int))):
       #print "int value"
      self.__value = value
