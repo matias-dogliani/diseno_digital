@@ -12,31 +12,43 @@ module FIRfilter
 	input i_enable, 
 	input i_reset, 
 
-	output [NBI_O:0] o_txsymb 	
+	output [NB_O:0] o_txsymb
 );
 
 	localparam NB_COEF = 8; 
-	localparam SUMFR = 11;  
-	integer i; 
-
-	reg [1:0] ShiftReg [LFILT-1:0]; 
+	localparam SUMFR = 11;  //Capaz que mejor si lo trunco ahí 
+	
+	 
+    integer i;
+    integer j; 
+    
+    reg signed [10-1:0] mul [0:LFILT-1]; 
+	reg signed [12-1:0] ShiftReg ; 
 	reg signed [1:0] ak; 
 	reg signed [SUMFR -1:0] sum; 
 	reg [2-1 : 0] MuxSel ; 
-	wire signed [10-1:0] mul; 	
+
+	reg signed [10-1:0] mul0;
+	reg signed [10-1:0] mul1; 
+	reg signed [10-1:0] mul2; 
+	reg signed [10-1:0] mul3; 
+	reg signed [10-1:0] mul4; 
+	reg signed [10-1:0] mul5; 
+
+	 
+
 	wire signed [NB_COEF -1 : 0] coef [0 : LFILT -1][0 : N_OS-1]; 
-	`include "coffs.v"
+	`include "./coffs.v"
 
 
-	/*Shift Register*/
+    /*Shift Register*/
 	always @(posedge i_clk or posedge i_reset) begin
 		if (i_reset)
 			ShiftReg <= { LFILT-1{ 2'b00 }}; 
 
 		else begin
-
 			if(i_enable)	
-				ShiftReg <= {ShiftReg[LFIT-2:0],i_ak}; 
+				ShiftReg <= {ShiftReg[ (LFILT-1)*2-1 : 0 ],i_ak}; 
 			else 
 				ShiftReg <= ShiftReg;
 		end
@@ -44,28 +56,32 @@ module FIRfilter
 	
 	/*Mux para coeficientes = LFILT = 6*/  
 	always @( *) begin
-		for (i = 0 ; i < LFILT ; i = i+1)begin
-			mul = $signed( i_ak[i] * $signed ( coef[MuxSel][LFILT])) ;	
-		end
+	
+	   mul0 = $signed ( $signed(ShiftReg[11:10]) *coef[0][MuxSel]); 
+	   mul1 = $signed ( $signed(ShiftReg[9:8]) * coef[1][MuxSel]);
+	   mul2 = $signed ( $signed(ShiftReg[7:6]) * coef[2][MuxSel]);
+	   mul3 = $signed ( $signed (ShiftReg[5:4]) * coef[3][MuxSel]);
+	   mul4 = $signed ( $signed(ShiftReg[3:2]) * coef[4][MuxSel]);
+	   mul5 = $signed ( $signed(ShiftReg[1:0]) * coef[5][MuxSel]);
+	      	     
+	end
+	
+
+    /*Selector de Mux input - frecuencia del clk */
+
+    always @(posedge i_clk or posedge i_reset) begin
+		if(i_enable || i_reset)
+			MuxSel <= {2-1 {1'b0}};
+		else 
+			MuxSel <= MuxSel + {1'b1};
 	end
 
 	/*Sumatorias - y[n]*/
-
 	always @( *) begin
-		sum = 0; 
-		for (i = 0 ; i < LFILT ; i = i+1)begin
-			sum = sum+mul[i]; 			
-		end
+		sum = $signed ( mul0 + mul1 + mul2 + mul3 + mul4 + mul5 ); 
 	end
 
-	/*MuxSel a frecuencia de clk */
-
-	always @(posedge i_clk or posedge i_reset) begin
-
-		if(i_enable || i_reset)
-			MuxSel <= {2-1 {1'b0}}
-		else 
-			MuxSel <= MuxSel + {1'b1}
-	end
+	
+    assign o_txsymb = sum; 
 
 endmodule //FIRfilter
