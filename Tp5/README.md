@@ -95,7 +95,7 @@ for validPulse in range(int(Nsymb)):
 
 Los símbolos transmitidos en punto fijo, y supuerpuesta a la de punto flotante se observan en la imagen 
 
-![Simbolos transmitidos FP](![image.png](attachment:image.png))
+![Simbolos transmitidos FP]()
    
 ## Ejercicio 3 
 
