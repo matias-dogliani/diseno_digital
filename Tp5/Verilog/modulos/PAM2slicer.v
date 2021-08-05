@@ -11,7 +11,7 @@ output signed [WL -1 : 0]o_akhat
 
 
 
-assign o_akhat = (i_ak >=0 ) {2'b01} : { 2'11};	 /*NO parametrizable pero simple */
+assign o_akhat = (i_ak >=0 )? {2'b01} : { 2'b11};	 /*NO parametrizable pero simple */
 
 
 endmodule //PAM2slicer
