@@ -113,7 +113,7 @@ Implementación del sistema en Verilog.
  
  #### Mapper 
 
- * [Descripción HDL]https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/Verilog/modulos/mapper.v)
+ * [Descripción HDL](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/Verilog/modulos/mapper.v)
  
  Este módulo es un multiplexor que se encarga de transformar la secuencia aleatoria generado por la LSFR a los símbolos correspondientes
  
