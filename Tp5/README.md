@@ -26,7 +26,8 @@ Implementación y simulación de alto y bajo nivel de sistema de comunicación s
    
    
    A diferencia del anterior, la secuencia aleatorio de símbolos se realiza con una **LFSR** de orden 9 implementada con flip flops de la clase *ff_model* 
-    ![LFSR generica](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/imgs/LFSR9.png)
+   
+   ![LFSR generica](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/imgs/lfsr.png)
         
     ``` 
     lfsrI.i = lfsrISeed
