@@ -29,7 +29,8 @@ Implementación y simulación de alto y bajo nivel de sistema de comunicación s
    
    ![LFSR generica](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/imgs/lfsr.png)
         
-    ```python
+
+```python
     lfsrI.i = lfsrISeed
     lfsrQ.i = lfsrQSeed
     lfsrI.run_clock()
@@ -49,8 +50,7 @@ Implementación y simulación de alto y bajo nivel de sistema de comunicación s
     
     PRBSeqI.append(lfsrI[8].o)
     PRBSeqQ.append(lfsrQ[8].o)
-    
-    ```
+```
     
 ### Filtro de convolución 
 
