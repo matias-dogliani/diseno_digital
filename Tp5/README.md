@@ -7,7 +7,7 @@ Implementación y simulación de alto y bajo nivel de sistema de comunicación s
 ## Ejercicio  1 
 
    En este ejercicio se implementan los bloques secuencialmente en alto nivel utilizando Python 3. 
-    * [Cuaderno de Resolución](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/Ej1.ipynb)
+   * [Cuaderno de Resolución](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/Ej1.ipynb)
     
    Los símbolos transmitidos con conformación de pulso son los de la imagen 
     
