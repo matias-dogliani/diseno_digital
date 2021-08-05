@@ -29,7 +29,7 @@ Implementación y simulación de alto y bajo nivel de sistema de comunicación s
    
    ![LFSR generica](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/imgs/lfsr.png)
         
-    ``` 
+    ```python
     lfsrI.i = lfsrISeed
     lfsrQ.i = lfsrQSeed
     lfsrI.run_clock()
@@ -58,7 +58,7 @@ Implementación y simulación de alto y bajo nivel de sistema de comunicación s
     ![FIR Filter](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/imgs/FIRFilter.png)
     
     
-``` 
+```python
 for validPulse in range(int(Nsymb)): 
     k=k+1
     #Seq input - Uso directamente la PRBSeq mapeada a Baud Rate (sin Os)
