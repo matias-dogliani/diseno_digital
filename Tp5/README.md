@@ -29,7 +29,8 @@ Implementación y simulación de alto y bajo nivel de sistema de comunicación s
    
    ![LFSR generica](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/imgs/lfsr.png)
         
-    ``` 
+
+```python
     lfsrI.i = lfsrISeed
     lfsrQ.i = lfsrQSeed
     lfsrI.run_clock()
@@ -49,8 +50,7 @@ Implementación y simulación de alto y bajo nivel de sistema de comunicación s
     
     PRBSeqI.append(lfsrI[8].o)
     PRBSeqQ.append(lfsrQ[8].o)
-    
-    ```
+```
     
 ### Filtro de convolución 
 
@@ -58,7 +58,7 @@ Implementación y simulación de alto y bajo nivel de sistema de comunicación s
     ![FIR Filter](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/imgs/FIRFilter.png)
     
     
-``` 
+```python
 for validPulse in range(int(Nsymb)): 
     k=k+1
     #Seq input - Uso directamente la PRBSeq mapeada a Baud Rate (sin Os)
@@ -113,7 +113,7 @@ Implementación del sistema en Verilog.
  
  #### Mapper 
 
- * [Descripción HDL]https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/Verilog/modulos/mapper.v)
+ * [Descripción HDL](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp5/Verilog/modulos/mapper.v)
  
  Este módulo es un multiplexor que se encarga de transformar la secuencia aleatoria generado por la LSFR a los símbolos correspondientes
  
