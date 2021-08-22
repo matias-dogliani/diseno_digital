@@ -11,13 +11,15 @@
 #define PORT_OUT        XPAR_AXI_GPIO_0_DEVICE_ID //XPAR_GPIO_0_DEVICE_ID
 
 //Device_ID Operaciones
-#define d_READ 1
-#define d_WRITE 0
+#define d_READ 0
+#define d_WRITE 1
 
 /*Trama structure*/
-#define FRAME_INIT  0x05               // (00000101)
+#define FRAME_INIT  0x05               		// (00000101)
 #define FRAME_HEAD_L  4
-#define FRAME_END  0x02
+#define FRAME_END  0x02				   		// (00000010)
+#define FRAME_SIZE(frame) (frame & 0x0F)
+
 XGpio GpioOutput;
 XGpio GpioParameter;
 XGpio GpioInput;
@@ -93,11 +95,12 @@ unsigned char receiveFrame(unsigned char *frame)
 
 	        if ( (*frame >> 4) & 1 == 0 ){       //Short frame
 
-	            read(stdin, (frame + FRAME_HEAD_L), 3);
+	            read(stdin, (frame + FRAME_HEAD_L), (FRAME_SIZE(*frame)));
 
-	            if ( read(stdin, (frame + FRAME_HEAD_L + 3),1) && \
-	                    *(frame + FRAME_HEAD_L + 3+1) >> 5 & 7 == FRAME_END)
-	                return 1;
+	            if ( read(stdin, (frame + FRAME_HEAD_L + (FRAME_SIZE(*frame))),1) && \
+	                    *(frame + FRAME_HEAD_L + (FRAME_SIZE(*frame))+1) >> 5 & 7 == FRAME_END)
+
+	            	return 1;
 	        }
 
 	    }
