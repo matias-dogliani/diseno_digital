@@ -58,8 +58,6 @@ int main()
 
         if (receiveFrame(frame)) 
 	    	{
-			data   = frame + HEADLENGTH;
-			device = frame + HEADLENGTH - 1;
 
 			if (*device)
                XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
@@ -94,11 +92,21 @@ unsigned char receiveFrame(unsigned char *frame)
     
         //LEO LOS 3 bits restantes de la cabecera 
         //Si es trama corta, leo el size y leo esas misma cantidad de bytes
-        //
-    
+        read(stdin,(frame+1),FRAME_HEAD_L - 1)
+
+
+        if ( (*frame >> 4) & 1 == 0 ){       //Short frame
+        
+            read(stdin, (frame + FRAME_HEAD_L), 3)  
+
+            if ( read(stdin, (frame + FRAME_HEAD_L + 3),1) && \ 
+                    *(frame + FRAME_HEAD_L + 3+1) >> 5 & 7 == FRAME_END) 
+                return 1 
+        } 
     
     }
 
+    return 0 
 
 }
 
