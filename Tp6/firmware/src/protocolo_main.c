@@ -17,9 +17,38 @@
 /*Trama structure*/
 #define NDATA 3
 #define FRAME_INIT  0x05               		// (00000101)
-#define FRAME_HEAD_L  4
+#define FRAME_HEAD_L  3
 #define FRAME_END  0x02				   		// (00000010)
 #define FRAME_SIZE(frame) (frame & 0x0F)
+#define FRAME_MAX_L 8
+
+/*Defino máscaras para cambiar el bit del determinado LED*/
+/*para hacer and bitwise con current copy of discrete register*/
+/*DiscreRead*/
+
+#define LED0_B 	0x00000001
+#define LED0_G 	0x00000002
+#define LED0_R 	0x00000004
+
+#define LED1_B 	0x00000008
+#define LED1_G 	0x00000010
+#define LED1_R 	0x00000020
+
+#define LED2_B 	0x00000040
+#define LED2_G 	0x00000080
+#define LED2_R 	0x00000100
+
+#define LED3_B 	0x00000200
+#define LED3_G 	0x00000400
+#define LED3_R 	0x00000800
+
+#define SW0 	0x00000001
+#define SW1		0x00000002
+#define SW2		0x00000004
+#define SW3		0x00000008
+
+
+
 
 XGpio GpioOutput;
 XGpio GpioParameter;
@@ -36,8 +65,8 @@ int main()
 {
 
 
-    unsigned char * frame;
-    //unsigned char datos[NDATA];
+    unsigned char  frame[8];
+    unsigned char datos[NDATA];
 
     init_platform();
 
@@ -63,14 +92,38 @@ int main()
         if (receiveFrame(frame))
 	    	{
 
-        		if (*(frame + FRAME_HEAD_L)){   							//Check device
-        			 XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
+        		if (*(frame + FRAME_HEAD_L)){  //Check device
+        			/*Command LED */
+        			datos[0]= *(frame + FRAME_HEAD_L+1);  //LED ID
+        			datos[1]= *(frame + FRAME_HEAD_L+2);  //LED Color
+        			datos[2]= *(frame + FRAME_HEAD_L+3);  //LED Estado
+
+        			// A hacer:
+        			/*
+        			 * 1 - Cambiar datos[2] por la desreferencia para no usar variables
+        			 * 2 - UNA AND entre R y 1 para poder comparar mejor
+        			 *     Y al resultado conocido de eso de ultima lo dejo en un define
+        			 * 3 - Enmascarar todo bien, de ultima revisar el RGB y no el BGR
+        			 * */
+
+        			if (datos[2] == '1')
+        				XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
+        			else
+        			XGpio_DiscreteWrite(&GpioOutput,1, (u32)  LED0_G | XGpio_DiscreteRead(&GpioOutput, 1));
 
         		}
 
 
+        		else {
+        			XGpio_DiscreteWrite(&GpioOutput,1, (u32)  LED0_G | XGpio_DiscreteRead(&GpioOutput, 1));
+        			//XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
+        			//LER PUERTOS
 
+        		}
 		   }
+        else
+        	//XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
+        	XGpio_DiscreteWrite(&GpioOutput,1, (u32)  LED0_G | XGpio_DiscreteRead(&GpioOutput, 1));
 
         }
 
@@ -83,9 +136,9 @@ unsigned char receiveFrame(unsigned char *frame)
 {
 	*frame=0;
 	 /*Check INIT Frame */
-	    if (read(stdin, frame,1) && ( ( ( (*frame) >> 5) & 7 ) == FRAME_INIT )) {
-	    	//return 1;
-	        //LEO LOS 3 bits restantes de la cabecera
+	   /* if (read(stdin, frame,1) && ( ( ( (*frame) >> 5) & 0x7 ) == FRAME_INIT )) {
+
+	    	//LEO LOS 3 bits restantes de la cabecera
 	        //Si es trama corta, leo el size y leo esas misma cantidad de bytes
 	        read(stdin,(frame+1),FRAME_HEAD_L - 1);
 
@@ -100,7 +153,10 @@ unsigned char receiveFrame(unsigned char *frame)
 
 	        }
 
-	    }
+	    }*/
+	if (read(stdin, frame,FRAME_MAX_L) && (  ( ((*frame)>> 5)& 0x7 )   == FRAME_INIT))
+	// if (read(stdin, frame,1) && ( ( ( (*frame) >> 5) & 0x7 ) == FRAME_INIT ))
+		return 1;
 
 	    return 0;
 
