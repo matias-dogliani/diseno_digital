@@ -1,9 +1,9 @@
 import serial 
 import sys
-
+import time 
 def main(): 
     
-    portName=sys.argv[0] if len(sys.argv)>1 else "/dev/ttyUSB6" 
+    portName=sys.argv[1] if len(sys.argv)>1 else "/dev/ttyUSB1" 
     print("Puerto: " , portName) 
     
     ser = serial.Serial( 
@@ -28,8 +28,12 @@ def main():
 
     while 1: 
         data = input("\n Ingrese un comando: ")  
-        
+        dataIn=[]  
+
         if data.upper() == 'Q': 
+            trama=TramaEnconder('000',1) #device = 1 : Write GPIO 32b'0 
+            for byte in trama:
+                ser.write(byte)
             ser.close() 
             exit('Programa finalizado \n')
 
@@ -40,17 +44,23 @@ def main():
                 ser.write(byte)
 
         elif len(data)==1: 
-           trama=TramaEnconder(data,0) 
-           print(trama) 
-
+            trama=TramaEnconder(data,0) 
+            for byte in trama:
+                print("Enviado ",byte)
+                ser.write(byte)
+            
+           # print("Esperando respuesta...")
+           # for i in range(6): 
+           #     dataIn.append( ser.read() ) 
+           # print(dataIN) 
+           # print("Estado de Switch []",data)
 
 def TramaEnconder(datos,device):                                                  
-    
     
     data = []                                                                      
     for char in datos:                                                               
         data.append(char.encode()) 
-
+    print(data) 
     trama = []                                                                  
     if len(data) >16:   #Solo trama corta
         return -1                                                               

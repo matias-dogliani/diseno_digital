@@ -23,8 +23,9 @@
 #define FRAME_INIT  0x05               		// (00000101)
 #define FRAME_HEAD_L  3
 #define FRAME_END  0x02				   		// (00000010)
-#define FRAME_SIZE(frame) (frame & 0x0F)
 #define FRAME_MAX_L 8
+#define FRAME_SHORT_F 0
+#define FRAME_SIZE(trama) (trama & 0x0F)
 
 /*Defino máscaras para cambiar el bit del determinado LED*/
 /*para hacer and bitwise con current copy of discrete register*/
@@ -68,6 +69,11 @@
 #define G3 ((unsigned char)('3'+'G' ))
 #define B3 ((unsigned char)('3'+'B' ))
 
+#define S0 ((unsigned char)('0'))
+#define S1 ((unsigned char)('1'))
+#define S2 ((unsigned char)('2'))
+#define S3 ((unsigned char)('3'))
+
 XGpio GpioOutput;
 XGpio GpioParameter;
 XGpio GpioInput;
@@ -76,8 +82,8 @@ XGpio GpioInput;
 
 XUartLite uart_module;
 
-unsigned char receiveFrame (unsigned char *frame);
-
+unsigned char rxFrame (unsigned char *frame);
+void txFrame (unsigned char *data);
 
 
 int main()
@@ -85,7 +91,7 @@ int main()
 	u32 GPO_SEL = 0x00000000;
 	u32 GPO_Mask = 0x00000000;
     unsigned char  frame[FRAME_MAX_L];
-    unsigned char LED_ID;
+    unsigned char LED_ID,SW_ID,sw_state;
 
     init_platform();
 
@@ -108,13 +114,13 @@ int main()
 
 	while(1){
 
-        if (receiveFrame(frame))
+        if (rxFrame(frame))
 	    	{
 
         		if (*(frame + FRAME_HEAD_L) == d_WRITE){  //Check device (mode)
 
         			LED_ID = *(frame + FRAME_HEAD_L+1) + *(frame + FRAME_HEAD_L+2);
-
+        			GPO_SEL=0x00000000;
         			switch(LED_ID){
 
         				case (R0):{	GPO_Mask = GPO_Mask | LED0_R; GPO_SEL = LED0_R; break;}
@@ -133,7 +139,7 @@ int main()
         				case (G3):{	GPO_Mask = GPO_Mask | LED3_G; GPO_SEL = LED3_G; break;}
         				case (B3):{	GPO_Mask = GPO_Mask | LED3_B; GPO_SEL = LED3_B; break;}
 
-        				default:GPO_Mask = 0x00000000;	}
+        				default:GPO_Mask = 0x00000000;GPO_SEL= 0x00000000;	}
 
         			if (*(frame + FRAME_HEAD_L+3) == GPIO_HIGH)
         				XGpio_DiscreteWrite(&GpioOutput,1, (GPO_Mask));
@@ -146,14 +152,20 @@ int main()
 
 
         		else {
-        			//XGpio_DiscreteWrite(&GpioOutput,1, (u32)  LED0_B | XGpio_DiscreteRead(&GpioOutput, 1));
-        			//XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
-        			//LER PUERTOS
-        		}
+        			GPO_SEL=0x00000000;
+        			SW_ID = *(frame + FRAME_HEAD_L+1);
+        			switch (SW_ID){
+
+        			case S0: {GPO_SEL = SW0; break;}
+        			case S1: {GPO_SEL = SW1; break;}
+        			case S2: {GPO_SEL = SW2; break;}
+        			case S3: {GPO_SEL = SW3; break;}
+
+        			}//end switchcase
+        		sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1)&(GPO_SEL) ) >> SW_ID  );
+        		txFrame(&sw_state);
+        		}//end READ SW
 		   }//endif checkframe
-        else
-        	//XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
-        	XGpio_DiscreteWrite(&GpioOutput,1, (u32)  LED1_R | XGpio_DiscreteRead(&GpioOutput, 1));
 
         }
 
@@ -162,34 +174,63 @@ int main()
 }
 
 
-unsigned char receiveFrame(unsigned char *frame)
+unsigned char rxFrame(unsigned char *frame)
 {
 	*frame=0;
-	 /*Check INIT Frame */
-	   /* if (read(stdin, frame,1) && ( ( ( (*frame) >> 5) & 0x7 ) == FRAME_INIT )) {
 
-	    	//LEO LOS 3 bits restantes de la cabecera
-	        //Si es trama corta, leo el size y leo esas misma cantidad de bytes
-	        read(stdin,(frame+1),FRAME_HEAD_L - 1);
+	   /*Check INIT Frame */
+	    if (read(stdin, frame,1) && ( ( ( (*frame) >> 5) & 0x7 ) == FRAME_INIT )) {
+
+	        if ( ((*frame >> 4) & 0x1) == FRAME_SHORT_F ){    										//Type: Short
+	        	read(stdin,(frame +1),FRAME_HEAD_L); 												//Read Size Bytes and device
+        	   // read(stdin, (frame + FRAME_HEAD_L), 1);//device
+
+        	    read(stdin, (frame + FRAME_HEAD_L + 1), FRAME_SIZE(*frame));						//Read data
+
+        	    if ( read(stdin, (frame + FRAME_HEAD_L + FRAME_SIZE(*frame) + 1), 1) &&  			//Read cola
+        	    	((*(frame + FRAME_HEAD_L + (FRAME_SIZE(*frame) + 1)) >> 5) & 0x7) == FRAME_END)
+	            return 1;
+
+	        } //end if check type
+	    }//end if check Frame init
 
 
-	        if ( (*frame >> 4) & 1 == 0 ){       //Short frame
-
-	            read(stdin, (frame + FRAME_HEAD_L), (FRAME_SIZE(*frame)));
-
-	            if ( read(stdin, (frame + FRAME_HEAD_L + (FRAME_SIZE(*frame))),1) && \
-	                    *(frame + FRAME_HEAD_L + (FRAME_SIZE(*frame))+1) >> 5 & 7 == FRAME_END)
-	            	return 1;
-
-	        }
-
-	    }*/
-	if (read(stdin, frame,FRAME_MAX_L) && (  ( ((*frame)>> 5)& 0x7 )   == FRAME_INIT))
+	/*if (read(stdin, frame,FRAME_MAX_L) && (  ( ((*frame)>> 5)& 0x7 )   == FRAME_INIT))
 	// if (read(stdin, frame,1) && ( ( ( (*frame) >> 5) & 0x7 ) == FRAME_INIT ))
-		return 1;
+		return 1;*/
 
 	    return 0;
 
 }
 
+void txFrame(unsigned char *data){
 
+	//Ahora envío solo trama corta. Para enviar trama larga tendría que
+	//contar el largo de data.
+
+	unsigned char frametx[FRAME_MAX_L -2];
+
+	//Armado de trama
+
+	*frametx = (FRAME_INIT & 0x7) << 5;   			//INIT Bits
+	*frametx = *frametx | ( (FRAME_SHORT_F & 0x1) >> 4);  //Short Frame
+	*frametx = *frametx | ( (1 & 0xF) );
+
+	*(frametx + 1) = 0;								//Size Byte MSB
+	*(frametx + 2) = 0;								// Size Byte LSB
+
+	*(frametx + FRAME_HEAD_L) = 0;					//Device Byte
+
+	//Data Bytes
+	//En este caso siempre es 1. Si cambia tendría que cargar byte por
+	//byte
+	*(frametx + FRAME_HEAD_L + 1 ) = *(data);
+
+	*(frametx + FRAME_HEAD_L + 2) = (FRAME_END & 0x7) << 5 | ( (FRAME_SHORT_F & 0x1) >> 4)| ( (1 & 0xF) );
+	//XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
+	//while(XUartLite_IsSending(&uart_module)){}
+	//XUartLite_Send(&uart_module, frame, FRAME_MAX_L - 2 );
+	while(XUartLite_IsSending(&uart_module)){}
+	               XUartLite_Send(&uart_module, frametx,1);
+	return;
+}
