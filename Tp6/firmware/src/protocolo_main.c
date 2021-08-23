@@ -12,9 +12,10 @@
 
 //Device_ID Operaciones
 #define d_READ 0
-#define d_WRITE 1
+#define d_WRITE '1'
 
 /*Trama structure*/
+#define NDATA 3
 #define FRAME_INIT  0x05               		// (00000101)
 #define FRAME_HEAD_L  4
 #define FRAME_END  0x02				   		// (00000010)
@@ -36,7 +37,7 @@ int main()
 
 
     unsigned char * frame;
-    unsigned char datos[] = "env";
+    //unsigned char datos[NDATA];
 
     init_platform();
 
@@ -62,16 +63,12 @@ int main()
         if (receiveFrame(frame))
 	    	{
 
-           XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
+        		if (*(frame + FRAME_HEAD_L)){   							//Check device
+        			 XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
 
-		//	if (*device)
-        //       XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
-        //
-        //    else{
-        //       datos="err";
-        //       while(XUartLite_IsSending(&uart_module)){}
-        //       XUartLite_Send(&uart_module, &(datos),3);
-        //    }
+        		}
+
+
 
 		   }
 
@@ -84,10 +81,10 @@ int main()
 
 unsigned char receiveFrame(unsigned char *frame)
 {
-
+	*frame=0;
 	 /*Check INIT Frame */
-	    if ( read(stdin, frame,1) && ((*frame >> 5) & 7 == FRAME_INIT ) ){
-
+	    if (read(stdin, frame,1) && ( ( ( (*frame) >> 5) & 7 ) == FRAME_INIT )) {
+	    	//return 1;
 	        //LEO LOS 3 bits restantes de la cabecera
 	        //Si es trama corta, leo el size y leo esas misma cantidad de bytes
 	        read(stdin,(frame+1),FRAME_HEAD_L - 1);
@@ -99,8 +96,8 @@ unsigned char receiveFrame(unsigned char *frame)
 
 	            if ( read(stdin, (frame + FRAME_HEAD_L + (FRAME_SIZE(*frame))),1) && \
 	                    *(frame + FRAME_HEAD_L + (FRAME_SIZE(*frame))+1) >> 5 & 7 == FRAME_END)
-
 	            	return 1;
+
 	        }
 
 	    }

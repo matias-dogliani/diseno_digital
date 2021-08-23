@@ -22,7 +22,7 @@ def main():
     
     print("1- Prender LEDs: \n" ) 
     print("\t < |0| |1| |2| |3| >< |R| |G| |B| ><  |1| |0|  >")
-    print("\t <  LEDs ID  ><  COLOR  ><  On/Off >")
+    print("\t <  LEDs NUM  ><  COLOR  ><  On/Off >")
     print('\n3- Q para terminar \n')
 
 
