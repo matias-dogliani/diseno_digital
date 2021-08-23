@@ -12,7 +12,7 @@
 
 //Device_ID Operaciones
 #define d_READ 0
-#define d_WRITE '1'
+#define d_WRITE 0x01
 
 /*Trama structure*/
 #define NDATA 3
@@ -26,6 +26,7 @@
 /*para hacer and bitwise con current copy of discrete register*/
 /*DiscreRead*/
 
+//Cambiar el hw_vio con colores iguales
 #define LED0_B 	0x00000001
 #define LED0_G 	0x00000002
 #define LED0_R 	0x00000004
@@ -42,11 +43,12 @@
 #define LED3_G 	0x00000400
 #define LED3_R 	0x00000800
 
-#define SW0 	0x00000001
-#define SW1		0x00000002
-#define SW2		0x00000004
-#define SW3		0x00000008
+#define SW0 0x00000001
+#define SW1	0x00000002
+#define SW2	0x00000004
+#define SW3	0x00000008
 
+#define R0 ('0'&'R' )
 
 
 
@@ -65,8 +67,8 @@ int main()
 {
 
 
-    unsigned char  frame[8];
-    unsigned char datos[NDATA];
+    unsigned char  frame[FRAME_MAX_L];
+    unsigned char LED_ID;
 
     init_platform();
 
@@ -92,38 +94,44 @@ int main()
         if (receiveFrame(frame))
 	    	{
 
-        		if (*(frame + FRAME_HEAD_L)){  //Check device
-        			/*Command LED */
-        			datos[0]= *(frame + FRAME_HEAD_L+1);  //LED ID
-        			datos[1]= *(frame + FRAME_HEAD_L+2);  //LED Color
-        			datos[2]= *(frame + FRAME_HEAD_L+3);  //LED Estado
+        		if (*(frame + FRAME_HEAD_L) == d_WRITE){  //Check device (mode)
 
-        			// A hacer:
-        			/*
-        			 * 1 - Cambiar datos[2] por la desreferencia para no usar variables
-        			 * 2 - UNA AND entre R y 1 para poder comparar mejor
-        			 *     Y al resultado conocido de eso de ultima lo dejo en un define
-        			 * 3 - Enmascarar todo bien, de ultima revisar el RGB y no el BGR
-        			 * */
+        			LED_ID = *(frame + FRAME_HEAD_L+1) & *(frame + FRAME_HEAD_L+2);
 
-        			if (datos[2] == '1')
-        				XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
-        			else
-        			XGpio_DiscreteWrite(&GpioOutput,1, (u32)  LED0_G | XGpio_DiscreteRead(&GpioOutput, 1));
+        			/*Ecendido de LEDs*/
+        			if (*(frame + FRAME_HEAD_L+3)) // ESTADO DEL LED
+        				// XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
+        			switch(LED_ID){
+
+        			case (R0):
+        				XGpio_DiscreteWrite(&GpioOutput,1, (u32)  LED0_G | XGpio_DiscreteRead(&GpioOutput, 1));
+
+        			default:
+        				XGpio_DiscreteWrite(&GpioOutput,1, (u32)  LED0_R | XGpio_DiscreteRead(&GpioOutput, 1));
+
+        			}
+
+
+        			else{
+
+        				/*Apagado de LEDs*/
+
+        			}
+
 
         		}
 
 
         		else {
-        			XGpio_DiscreteWrite(&GpioOutput,1, (u32)  LED0_G | XGpio_DiscreteRead(&GpioOutput, 1));
-        			//XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
+        			//XGpio_DiscreteWrite(&GpioOutput,1, (u32)  LED0_B | XGpio_DiscreteRead(&GpioOutput, 1));
+        			XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
         			//LER PUERTOS
 
         		}
 		   }
         else
         	//XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
-        	XGpio_DiscreteWrite(&GpioOutput,1, (u32)  LED0_G | XGpio_DiscreteRead(&GpioOutput, 1));
+        	XGpio_DiscreteWrite(&GpioOutput,1, (u32)  LED1_G | XGpio_DiscreteRead(&GpioOutput, 1));
 
         }
 
