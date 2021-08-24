@@ -2,18 +2,18 @@
 
 Plataforma de verificación. Se utiliza un microcontrolador embebido *microblaze* en la FPGA para controlar el estado de los switch y de los LEDs RGB. Se implementa el sistema de la imagen 
 
-![Bloques del sistema](#) 
+![Bloques del sistema]( https://github.com/matias-dogliani/diseno_digital/blob/master/Tp6/imgs/sistema.png) 
 
 
 Con la herramienta de *Block Desing* de Vivado se implementan los bloques y la conexión entre ellos para lograr el sistema, y también el bloque de *Virtual Inputs/Outputs* VIO para poder controlar los switches virtualmentes y verificar el estado de los LEDs. 
 
 ## MicroBlaze 
 
-![Imagen de MicroBlaze](#)
+![Imagen de MicroBlaze](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp6/imgs/microblaze.png )
 
 
 ## VIO 
-![Imagen de VIO](#)
+![Imagen de VIO]( https://github.com/matias-dogliani/diseno_digital/blob/master/Tp6/imgs/vio.png)
 
 
 ## Comunicación y control
@@ -84,7 +84,7 @@ else{
 NOTA: Se utilzaron 2 variables de enmascarado debido a que la función DiscreteRead no parecía funcionar correctamente. 
 
 
-![Encendido de LEDS - GIF](#)
+![Encendido de LEDS - GIF](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp6/imgs/encendido_LEDs.gif )
 
 
 ### Estado de switches 
