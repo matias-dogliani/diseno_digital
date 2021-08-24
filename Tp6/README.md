@@ -93,3 +93,5 @@ NOTA: Se utilzaron 2 variables de enmascarado debido a que la función DiscreteR
 ### Estado de switches 
 
 Mediante el script en python corriendo en la PC se envía el número de switch que se desea concer el estado, se leen los registros correspondientes y mediante el código en C de MicroBlaze se envía este valor entramado de la misma forma que en python. Luego se recibe esta trama en la PC y se realizan las correspondientes verificiones para validar la trama. 
+
+![Estado de switches](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp6/imgs/switches.png )
