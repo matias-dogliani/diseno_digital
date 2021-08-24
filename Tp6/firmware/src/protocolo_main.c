@@ -159,13 +159,13 @@ int main()
         			SW_ID = *(frame + FRAME_HEAD_L+1);
         			switch (SW_ID){
 
-        			case S0: {GPO_SEL = SW0; break;}
-        			case S1: {GPO_SEL = SW1; break;}
-        			case S2: {GPO_SEL = SW2; break;}
-        			case S3: {GPO_SEL = SW3; break;}
+        			case S0: {GPO_SEL = SW0; sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1)&(GPO_SEL) ) >> 0); break;}
+        			case S1: {GPO_SEL = SW1; sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1)&(GPO_SEL) ) >> 1); break;}
+        			case S2: {GPO_SEL = SW2; sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1)&(GPO_SEL) ) >> 2); break;}
+        			case S3: {GPO_SEL = SW3; sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1)&(GPO_SEL) ) >> 3); break;}
 
         			}//end switchcase
-        		sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1)&(GPO_SEL) ) >> SW_ID  );
+
         		txFrame(&sw_state);
         		}//end READ SW
 		   }//endif checkframe
