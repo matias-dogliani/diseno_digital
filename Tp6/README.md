@@ -18,6 +18,9 @@ Con la herramienta de *Block Desing* de Vivado se implementan los bloques y la c
 
 ## Comunicación y control
 
+* PC: [Source Python](https://github.com/matias-dogliani/diseno_digital/blob/master/Tp6/tp6.py ) 
+* MicroBlaze: [Source C]( https://github.com/matias-dogliani/diseno_digital/blob/master/Tp6/firmware/src/protocolo_main.c)
+
 Desde la PC que en la que se encuentra conectada la FPGA por USB se envían ciertos comandos codificados en una trama, con la estructura de la tabla desde un script en *python*. 
 
 |    Trama     |      Byte         |     Significado   |    Valor        |
