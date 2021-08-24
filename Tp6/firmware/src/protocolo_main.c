@@ -7,6 +7,8 @@
 #include "xuartlite.h"
 #include "microblaze_sleep.h"
 
+#define DEBUG XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249); //A falta de printf
+
 #define PORT_IN         XPAR_AXI_GPIO_0_DEVICE_ID //XPAR_GPIO_0_DEVICE_ID
 #define PORT_OUT        XPAR_AXI_GPIO_0_DEVICE_ID //XPAR_GPIO_0_DEVICE_ID
 
@@ -146,13 +148,14 @@ int main()
         			else{
         				GPO_Mask = ~GPO_SEL & GPO_Mask;
         				XGpio_DiscreteWrite(&GpioOutput,1, (GPO_Mask));}
-        			    //  XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
+
 
         		}//endif check device
 
 
-        		else {
+        		else if (*(frame + FRAME_HEAD_L) == d_READ){
         			GPO_SEL=0x00000000;
+
         			SW_ID = *(frame + FRAME_HEAD_L+1);
         			switch (SW_ID){
 
@@ -212,14 +215,14 @@ void txFrame(unsigned char *data){
 
 	//Armado de trama
 
-	*frametx = (FRAME_INIT & 0x7) << 5;   			//INIT Bits
-	*frametx = *frametx | ( (FRAME_SHORT_F & 0x1) >> 4);  //Short Frame
+	*frametx = (FRAME_INIT & 0x7) << 5;   							//INIT Bits
+	*frametx = *frametx | ( (FRAME_SHORT_F & 0x1) >> 4);  			//Short Frame
 	*frametx = *frametx | ( (1 & 0xF) );
 
-	*(frametx + 1) = 0;								//Size Byte MSB
-	*(frametx + 2) = 0;								// Size Byte LSB
+	*(frametx + 1) = 0;												//Size Byte MSB
+	*(frametx + 2) = 0;												// Size Byte LSB
 
-	*(frametx + FRAME_HEAD_L) = 0;					//Device Byte
+	*(frametx + FRAME_HEAD_L) = 0;									//Device Byte
 
 	//Data Bytes
 	//En este caso siempre es 1. Si cambia tendría que cargar byte por
@@ -228,9 +231,10 @@ void txFrame(unsigned char *data){
 
 	*(frametx + FRAME_HEAD_L + 2) = (FRAME_END & 0x7) << 5 | ( (FRAME_SHORT_F & 0x1) >> 4)| ( (1 & 0xF) );
 	//XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249);
-	//while(XUartLite_IsSending(&uart_module)){}
-	//XUartLite_Send(&uart_module, frame, FRAME_MAX_L - 2 );
 	while(XUartLite_IsSending(&uart_module)){}
-	               XUartLite_Send(&uart_module, frametx,1);
+	XUartLite_Send(&uart_module, frametx, FRAME_MAX_L - 2 );
+
+	/*while(XUartLite_IsSending(&uart_module)){}
+	               XUartLite_Send(&uart_module, frametx,1);*/
 	return;
 }
