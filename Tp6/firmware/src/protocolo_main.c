@@ -7,7 +7,7 @@
 #include "xuartlite.h"
 #include "microblaze_sleep.h"
 
-#define DEBUG XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249); //A falta de printf
+#define DEBUG XGpio_DiscreteWrite(&GpioOutput,1, (u32) 0x00000249) //A falta de printf
 
 #define PORT_IN         XPAR_AXI_GPIO_0_DEVICE_ID //XPAR_GPIO_0_DEVICE_ID
 #define PORT_OUT        XPAR_AXI_GPIO_0_DEVICE_ID //XPAR_GPIO_0_DEVICE_ID
@@ -93,7 +93,8 @@ int main()
 	u32 GPO_SEL = 0x00000000;
 	u32 GPO_Mask = 0x00000000;
     unsigned char  frame[FRAME_MAX_L];
-    unsigned char LED_ID,SW_ID,sw_state;
+    unsigned char LED_ID,SW_ID;
+    uint8_t sw_state;
 
     init_platform();
 
@@ -155,16 +156,19 @@ int main()
 
         		else if (*(frame + FRAME_HEAD_L) == d_READ){
         			GPO_SEL=0x00000000;
-
+        			sw_state=0;
         			SW_ID = *(frame + FRAME_HEAD_L+1);
         			switch (SW_ID){
 
-        			case S0: {GPO_SEL = SW0; sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1)&(GPO_SEL) ) >> 0); break;}
-        			case S1: {GPO_SEL = SW1; sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1)&(GPO_SEL) ) >> 1); break;}
-        			case S2: {GPO_SEL = SW2; sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1)&(GPO_SEL) ) >> 2); break;}
-        			case S3: {GPO_SEL = SW3; sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1)&(GPO_SEL) ) >> 3); break;}
+        			case S0: {GPO_SEL = SW0; sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioOutput,1) & (GPO_SEL) ) >> 0); break;}
+        			case S1: {GPO_SEL = SW1; sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1) & (GPO_SEL) ) >> 1); break;}
+        			case S2: {GPO_SEL = SW2; sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1) & (GPO_SEL) ) >> 2); break;}
+        			case S3: {GPO_SEL = SW3; sw_state = (unsigned char)( ( XGpio_DiscreteRead(&GpioInput,1) & (GPO_SEL) ) >> 3); break;}
 
         			}//end switchcase
+
+        			if (sw_state)
+        				DEBUG;
 
         		txFrame(&sw_state);
         		}//end READ SW
