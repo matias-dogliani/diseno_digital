@@ -75,7 +75,7 @@ def TramaDecoder(datos):
         return 
 
     dataSize = int(data[0]&0x0F)
-    return data[3:3+dataSize]
+    return data[-2]
 
 def TramaEnconder(datos,device):                                                  
     
